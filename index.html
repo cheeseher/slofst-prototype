@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slofst iOS App 原型图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#F27A54',
+                        'primary-light': '#F8A17A',
+                        'primary-dark': '#D96A48',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'iphone': '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.1)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    },
+                    width: {
+                        'iphone': '393px',
+                    },
+                    height: {
+                        'iphone': '852px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .glass-dark {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #F27A54 0%, #F8A17A 50%, #FFD4C4 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #F27A54 0%, #F8A17A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .iphone-frame {
+            border-radius: 50px;
+            box-shadow: 0 0 0 12px #1a1a1a, 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .dynamic-island {
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 20px;
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        .message-bubble-sent {
+            background: linear-gradient(135deg, #F27A54 0%, #F8A17A 100%);
+            border-radius: 20px 20px 4px 20px;
+        }
+        .message-bubble-received {
+            background: #E9E9EB;
+            border-radius: 20px 20px 20px 4px;
+        }
+        .card-stack {
+            perspective: 1000px;
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 122, 84, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(242, 122, 84, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(242, 122, 84, 0); }
+        }
+        .scroll-indicator {
+            animation: scroll 2s ease-in-out infinite;
+        }
+        @keyframes scroll {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+        .tag-glow:hover {
+            box-shadow: 0 0 20px rgba(242, 122, 84, 0.4);
+        }
+        .connector-line {
+            stroke-dasharray: 5,5;
+            animation: dash 20s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -100; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">S</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Slofst</h1>
+                    <p class="text-xs text-gray-500">iOS App 原型图</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-gray-500">iPhone 15 Pro</span>
+                <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">393 × 852</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Section 1: Onboarding -->
+            <section class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white font-bold text-xl">1</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Onboarding 引导页</h2>
+                        <p class="text-gray-500">4步用户注册流程</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Step 1: Welcome -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">1</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full gradient-bg flex flex-col items-center justify-center px-8 pt-20">
+                                <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center mb-6 floating">
+                                    <span class="text-white font-bold text-4xl">S</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white mb-2">Slofst</h3>
+                                <p class="text-white/80 text-center mb-8">找到你的灵魂伴侣</p>
+                                
+                                <div class="w-full space-y-3 mb-8">
+                                    <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4">
+                                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">💝</div>
+                                        <div class="text-white text-sm">智能匹配算法</div>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4">
+                                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">🔒</div>
+                                        <div class="text-white text-sm">隐私安全保护</div>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-xl p-4">
+                                        <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">✨</div>
+                                        <div class="text-white text-sm">真实用户认证</div>
+                                    </div>
+                                </div>
+                                
+                                <button class="w-full bg-white text-primary font-semibold py-4 rounded-2xl shadow-lg">
+                                    开始探索
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">欢迎页</p>
+                    </div>
+
+                    <!-- Step 2: Basic Info -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">2</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-50 flex flex-col pt-20 px-6">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-1">基础信息</h3>
+                                <p class="text-gray-500 text-sm mb-6">让我们更好地了解你</p>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-2 block">昵称</label>
+                                        <input type="text" value="小可爱" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-primary">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-2 block">年龄</label>
+                                        <input type="text" value="25" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-primary">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-2 block">性别</label>
+                                        <div class="grid grid-cols-3 gap-3">
+                                            <button class="py-3 bg-primary text-white rounded-xl font-medium">女</button>
+                                            <button class="py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium">男</button>
+                                            <button class="py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium">其他</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-auto mb-8">
+                                    <button class="w-full gradient-bg text-white font-semibold py-4 rounded-2xl shadow-lg">
+                                        下一步
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">基础信息</p>
+                    </div>
+
+                    <!-- Step 3: Preferences -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">3</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-50 flex flex-col pt-20 px-6">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-1">偏好设置</h3>
+                                <p class="text-gray-500 text-sm mb-6">定制你的理想型</p>
+                                
+                                <div class="space-y-5">
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-3 block">性取向</label>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-4 py-2 bg-primary text-white rounded-full text-sm">异性恋</span>
+                                            <span class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-full text-sm">同性恋</span>
+                                            <span class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-full text-sm">双性恋</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-3 block">兴趣标签</label>
+                                        <div class="flex flex-wrap gap-2">
+                                            <span class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs">🎵 音乐</span>
+                                            <span class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs">🎬 电影</span>
+                                            <span class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs">📚 阅读</span>
+                                            <span class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs">🏃 运动</span>
+                                            <span class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs">✈️ 旅行</span>
+                                            <span class="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs">🍳 美食</span>
+                                            <span class="px-3 py-1.5 bg-white border border-gray-200 text-gray-200 rounded-lg text-xs">+ 添加</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="text-sm font-medium text-gray-700 mb-3 block">理想型</label>
+                                        <textarea class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 text-sm focus:outline-none focus:border-primary resize-none" rows="3" placeholder="描述你喜欢的类型...">温柔、有幽默感、喜欢户外活动</textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-auto mb-8">
+                                    <button class="w-full gradient-bg text-white font-semibold py-4 rounded-2xl shadow-lg">
+                                        完成
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">偏好设置</p>
+                    </div>
+
+                    <!-- Step 4: Ready -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">4</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full gradient-bg flex flex-col items-center justify-center px-8 pt-20">
+                                <div class="w-32 h-32 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-6 pulse-ring">
+                                    <span class="text-6xl">🎉</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white mb-2">准备就绪!</h3>
+                                <p class="text-white/80 text-center mb-8">你的个人资料已创建完成<br>开始探索属于你的缘分吧</p>
+                                
+                                <div class="w-full bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8">
+                                    <div class="flex items-center justify-between text-white mb-3">
+                                        <span>资料完整度</span>
+                                        <span class="font-bold">85%</span>
+                                    </div>
+                                    <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+                                        <div class="h-full w-[85%] bg-white rounded-full"></div>
+                                    </div>
+                                </div>
+                                
+                                <button class="w-full bg-white text-primary font-semibold py-4 rounded-2xl shadow-lg">
+                                    开始匹配
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">就绪页</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Discover -->
+            <section class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white font-bold text-xl">2</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Discover 发现页</h2>
+                        <p class="text-gray-500">全屏卡片滑动匹配</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-900 flex flex-col">
+                                <!-- Header -->
+                                <div class="glass-dark px-6 pt-14 pb-4 flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
+                                            <span class="text-white font-bold text-sm">S</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        <span class="text-white/80 text-xs">128 人在线</span>
+                                    </div>
+                                    <button class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Card Stack -->
+                                <div class="flex-1 relative card-stack p-4">
+                                    <!-- Background Card -->
+                                    <div class="absolute inset-4 bg-gray-800 rounded-3xl transform rotate-3 scale-95 opacity-50"></div>
+                                    
+                                    <!-- Main Card -->
+                                    <div class="absolute inset-4 bg-white rounded-3xl overflow-hidden shadow-2xl">
+                                        <div class="h-[65%] relative">
+                                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop" alt="Profile" class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                            <div class="absolute top-4 right-4">
+                                                <div class="bg-white/20 backdrop-blur-md rounded-full px-3 py-1">
+                                                    <span class="text-white text-sm font-medium">3.2km</span>
+                                                </div>
+                                            </div>
+                                            <div class="absolute bottom-4 left-4 right-4">
+                                                <div class="flex items-end justify-between">
+                                                    <div>
+                                                        <h3 class="text-2xl font-bold text-white">小雨, 24</h3>
+                                                        <p class="text-white/80 text-sm">设计师 · 上海</p>
+                                                    </div>
+                                                    <div class="w-14 h-14 gradient-bg rounded-full flex items-center justify-center">
+                                                        <span class="text-white font-bold">92%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="p-5">
+                                            <p class="text-gray-700 text-sm mb-4 line-clamp-2">热爱摄影和旅行，喜欢探索城市的每个角落。希望能找到一个志同道合的伙伴一起去看世界。</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">📸 摄影</span>
+                                                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">✈️ 旅行</span>
+                                                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">☕ 咖啡</span>
+                                                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">🎨 艺术</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="glass-dark px-6 py-5 flex items-center justify-center gap-6">
+                                    <button class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center shadow-lg shadow-primary/30 hover:scale-105 transition-transform">
+                                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">发现页 - 卡片匹配</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Chat -->
+            <section class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white font-bold text-xl">3</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Chat 聊天</h2>
+                        <p class="text-gray-500">聊天列表与对话详情</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 justify-items-center">
+                    <!-- Chat List -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">A</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-50 flex flex-col">
+                                <!-- Header -->
+                                <div class="glass px-6 pt-14 pb-4">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h2 class="text-2xl font-bold text-gray-900">消息</h2>
+                                        <button class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="relative">
+                                        <input type="text" placeholder="搜索联系人..." class="w-full bg-gray-100 rounded-xl px-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                                        <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                
+                                <!-- Chat List -->
+                                <div class="flex-1 overflow-hidden">
+                                    <div class="p-4 space-y-2">
+                                        <!-- Chat Item 1 -->
+                                        <div class="bg-white rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                                            <div class="relative">
+                                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-14 h-14 rounded-full object-cover">
+                                                <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h4 class="font-semibold text-gray-900">阿明</h4>
+                                                    <span class="text-xs text-gray-400">2分钟前</span>
+                                                </div>
+                                                <p class="text-sm text-gray-500 truncate">今晚有空一起看电影吗？</p>
+                                            </div>
+                                            <div class="w-5 h-5 gradient-bg rounded-full flex items-center justify-center">
+                                                <span class="text-white text-xs font-bold">1</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Chat Item 2 -->
+                                        <div class="bg-white rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                                            <div class="relative">
+                                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Avatar" class="w-14 h-14 rounded-full object-cover">
+                                                <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-gray-300 border-2 border-white rounded-full"></div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h4 class="font-semibold text-gray-900">琳琳</h4>
+                                                    <span class="text-xs text-gray-400">1小时前</span>
+                                                </div>
+                                                <p class="text-sm text-gray-500 truncate">好的，那我们周末见！</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Chat Item 3 -->
+                                        <div class="bg-white rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                                            <div class="relative">
+                                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" alt="Avatar" class="w-14 h-14 rounded-full object-cover">
+                                                <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h4 class="font-semibold text-gray-900">浩然</h4>
+                                                    <span class="text-xs text-gray-400">昨天</span>
+                                                </div>
+                                                <p class="text-sm text-gray-500 truncate">我也很喜欢那家餐厅</p>
+                                            </div>
+                                            <div class="w-5 h-5 gradient-bg rounded-full flex items-center justify-center">
+                                                <span class="text-white text-xs font-bold">3</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Chat Item 4 -->
+                                        <div class="bg-white rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                                            <div class="relative">
+                                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="Avatar" class="w-14 h-14 rounded-full object-cover">
+                                                <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-gray-300 border-2 border-white rounded-full"></div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h4 class="font-semibold text-gray-900">小美</h4>
+                                                    <span class="text-xs text-gray-400">2天前</span>
+                                                </div>
+                                                <p class="text-sm text-gray-500 truncate">哈哈，真的很有趣！</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tab Bar -->
+                                <div class="glass px-6 py-3 flex items-center justify-around">
+                                    <button class="flex flex-col items-center gap-1 text-gray-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                        </svg>
+                                        <span class="text-xs">发现</span>
+                                    </button>
+                                    <button class="flex flex-col items-center gap-1 text-primary">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                                        </svg>
+                                        <span class="text-xs font-medium">消息</span>
+                                        <div class="w-1 h-1 bg-primary rounded-full"></div>
+                                    </button>
+                                    <button class="flex flex-col items-center gap-1 text-gray-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                        <span class="text-xs">我的</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">聊天列表</p>
+                    </div>
+
+                    <!-- Chat Detail -->
+                    <div class="relative">
+                        <div class="absolute -top-3 -left-3 w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm z-10">B</div>
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-50 flex flex-col">
+                                <!-- Header -->
+                                <div class="glass px-6 pt-14 pb-4 flex items-center gap-4">
+                                    <button class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+                                            <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold text-gray-900">阿明</h3>
+                                            <p class="text-xs text-green-500">在线</p>
+                                        </div>
+                                    </div>
+                                    <button class="ml-auto w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <!-- Messages -->
+                                <div class="flex-1 overflow-hidden px-4 py-4">
+                                    <div class="space-y-4">
+                                        <!-- Date -->
+                                        <div class="flex justify-center">
+                                            <span class="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">今天 14:30</span>
+                                        </div>
+                                        
+                                        <!-- Received -->
+                                        <div class="flex items-end gap-2">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                                            <div class="message-bubble-received px-4 py-2.5 max-w-[70%]">
+                                                <p class="text-gray-800 text-sm">嗨！最近好吗？</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Sent -->
+                                        <div class="flex items-end gap-2 justify-end">
+                                            <div class="message-bubble-sent px-4 py-2.5 max-w-[70%]">
+                                                <p class="text-white text-sm">挺好的！工作忙完了，终于有时间休息啦 😊</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Received -->
+                                        <div class="flex items-end gap-2">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                                            <div class="message-bubble-received px-4 py-2.5 max-w-[70%]">
+                                                <p class="text-gray-800 text-sm">那太好了！今晚有空一起看电影吗？新上映的那部爱情片听说很不错</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Sent -->
+                                        <div class="flex items-end gap-2 justify-end">
+                                            <div class="message-bubble-sent px-4 py-2.5 max-w-[70%]">
+                                                <p class="text-white text-sm">听起来不错！几点呢？</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Received with image -->
+                                        <div class="flex items-end gap-2">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                                            <div class="message-bubble-received px-4 py-2.5 max-w-[70%]">
+                                                <p class="text-gray-800 text-sm mb-2">7点怎么样？我买了票</p>
+                                                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=200&fit=crop" alt="Movie" class="w-full h-24 object-cover rounded-lg">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Typing -->
+                                        <div class="flex items-end gap-2">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Avatar" class="w-8 h-8 rounded-full object-cover">
+                                            <div class="bg-gray-200 rounded-2xl rounded-bl-sm px-4 py-3">
+                                                <div class="flex gap-1">
+                                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                                    <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Input -->
+                                <div class="glass px-4 py-3">
+                                    <div class="flex items-center gap-3">
+                                        <button class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="flex-1 bg-gray-100 rounded-full px-4 py-2.5 flex items-center gap-2">
+                                            <input type="text" placeholder="输入消息..." class="flex-1 bg-transparent text-sm focus:outline-none">
+                                            <button class="text-gray-400">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <button class="w-10 h-10 gradient-bg rounded-full flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">聊天详情</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Profile -->
+            <section class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 gradient-bg rounded-2xl flex items-center justify-center text-white font-bold text-xl">4</div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Profile 设置页</h2>
+                        <p class="text-gray-500">个人中心与偏好设置</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <div class="iphone-frame w-iphone h-iphone bg-white overflow-hidden relative">
+                            <div class="dynamic-island"></div>
+                            <div class="h-full bg-gray-50 flex flex-col">
+                                <!-- Header -->
+                                <div class="px-6 pt-14 pb-4">
+                                    <h2 class="text-2xl font-bold text-gray-900">我的</h2>
+                                </div>
+                                
+                                <!-- Scrollable Content -->
+                                <div class="flex-1 overflow-hidden">
+                                    <div class="px-4 pb-24 space-y-4">
+                                        <!-- Profile Card -->
+                                        <div class="bg-white rounded-2xl p-5 shadow-sm">
+                                            <div class="flex items-center gap-4">
+                                                <div class="relative">
+                                                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop" alt="Profile" class="w-20 h-20 rounded-full object-cover">
+                                                    <button class="absolute -bottom-1 -right-1 w-7 h-7 gradient-bg rounded-full flex items-center justify-center">
+                                                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="flex items-center gap-2">
+                                                        <h3 class="text-xl font-bold text-gray-900">小可爱</h3>
+                                                        <span class="px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-full">VIP</span>
+                                                    </div>
+                                                    <p class="text-gray-500 text-sm">ID: 8923471</p>
+                                                    <div class="flex items-center gap-4 mt-2">
+                                                        <div class="text-center">
+                                                            <div class="text-lg font-bold text-gray-900">128</div>
+                                                            <div class="text-xs text-gray-400">关注</div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            <div class="text-lg font-bold text-gray-900">56</div>
+                                                            <div class="text-xs text-gray-400">粉丝</div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            <div class="text-lg font-bold text-gray-900">2.3k</div>
+                                                            <div class="text-xs text-gray-400">获赞</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- VIP Card -->
+                                        <div class="gradient-bg rounded-2xl p-5 relative overflow-hidden">
+                                            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                                            <div class="relative z-10">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    <span class="text-2xl">👑</span>
+                                                    <h3 class="text-lg font-bold text-white">VIP 会员</h3>
+                                                </div>
+                                                <p class="text-white/80 text-sm mb-4">解锁无限滑动、查看访客、隐身模式等特权</p>
+                                                <div class="flex items-center justify-between">
+                                                    <div class="text-white/60 text-xs">剩余 15 天</div>
+                                                    <button class="bg-white text-primary font-semibold px-4 py-2 rounded-xl text-sm">
+                                                        续费
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Settings -->
+                                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                                            <div class="p-4 flex items-center justify-between border-b border-gray-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">深色模式</span>
+                                                </div>
+                                                <div class="w-12 h-7 bg-primary rounded-full relative cursor-pointer">
+                                                    <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow-md"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-4 flex items-center justify-between border-b border-gray-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-blue-50 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">语言</span>
+                                                </div>
+                                                <div class="flex items-center gap-2 text-gray-400">
+                                                    <span class="text-sm">简体中文</span>
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-4 flex items-center justify-between border-b border-gray-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">通知设置</span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                            
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-green-50 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">隐私与安全</span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- About -->
+                                        <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                                            <div class="p-4 flex items-center justify-between border-b border-gray-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-gray-100 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">关于 Slofst</span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                            
+                                            <div class="p-4 flex items-center justify-between border-b border-gray-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-gray-100 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">用户协议</span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                            
+                                            <div class="p-4 flex items-center justify-between">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-9 h-9 bg-gray-100 rounded-xl flex items-center justify-center">
+                                                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <span class="text-gray-900 font-medium">隐私政策</span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Logout -->
+                                        <button class="w-full bg-white rounded-2xl p-4 flex items-center justify-center gap-2 shadow-sm text-red-500 font-medium">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                            </svg>
+                                            退出登录
+                                        </button>
+                                        
+                                        <p class="text-center text-xs text-gray-400">Version 2.1.0</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tab Bar -->
+                                <div class="glass px-6 py-3 flex items-center justify-around absolute bottom-0 left-0 right-0">
+                                    <button class="flex flex-col items-center gap-1 text-gray-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                        </svg>
+                                        <span class="text-xs">发现</span>
+                                    </button>
+                                    <button class="flex flex-col items-center gap-1 text-gray-400">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                        </svg>
+                                        <span class="text-xs">消息</span>
+                                    </button>
+                                    <button class="flex flex-col items-center gap-1 text-primary">
+                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                        </svg>
+                                        <span class="text-xs font-medium">我的</span>
+                                        <div class="w-1 h-1 bg-primary rounded-full"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-center text-sm text-gray-500 mt-4">设置页</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center py-12 border-t border-gray-200">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                        <span class="text-white font-bold">S</span>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">Slofst</span>
+                </div>
+                <p class="text-gray-500 text-sm">iOS App 原型图设计</p>
+                <p class="text-gray-400 text-xs mt-2">Created with ❤️ · 2025</p>
+            </footer>
+        </div>
+    </main>
+
+    <!-- Scroll to top -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 w-12 h-12 gradient-bg rounded-full shadow-lg flex items-center justify-center text-white hover:scale-110 transition-transform">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+</body>
+</html>
