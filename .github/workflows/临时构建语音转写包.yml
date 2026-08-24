@@ -1,0 +1,53 @@
+name: 临时构建语音转写包
+
+on:
+  push:
+    branches:
+      - tmp/asr-download-links-20260825
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: 拉取 whisper.cpp
+        run: git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git
+
+      - name: 构建 Linux 转写程序
+        run: |
+          cmake -S whisper.cpp -B whisper.cpp/build \
+            -DWHISPER_BUILD_TESTS=OFF \
+            -DWHISPER_BUILD_EXAMPLES=ON \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build whisper.cpp/build --config Release -j2
+
+      - name: 下载中文多语种模型
+        run: bash whisper.cpp/models/download-ggml-model.sh small-q5_1
+
+      - name: 打包
+        run: |
+          mkdir -p package
+          cp whisper.cpp/build/bin/whisper-cli package/
+          cp whisper.cpp/models/ggml-small-q5_1.bin package/
+          chmod +x package/whisper-cli
+          zip -0 -j whisper-small-q5-linux.zip package/*
+          sha256sum whisper-small-q5-linux.zip > whisper-small-q5-linux.zip.sha256
+          ls -lh whisper-small-q5-linux.zip*
+
+      - name: 创建临时发布
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete asr-temp-20260825 --repo "${{ github.repository }}" --yes --cleanup-tag || true
+          gh release create asr-temp-20260825 \
+            whisper-small-q5-linux.zip \
+            whisper-small-q5-linux.zip.sha256 \
+            --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" \
+            --title "临时语音转写包" \
+            --notes "仅用于本次录音离线转写，完成后删除。"
+          gh issue comment 3 --repo "${{ github.repository }}" --body "临时语音转写包已构建：https://github.com/${{ github.repository }}/releases/download/asr-temp-20260825/whisper-small-q5-linux.zip"
