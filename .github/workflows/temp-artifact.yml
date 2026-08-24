@@ -1,20 +1,23 @@
-name: 临时工件测试
+name: 临时语音识别模型下载
 
 on:
-  push:
-    paths:
-      - '.github/workflows/temp-artifact.yml'
   pull_request:
 
 jobs:
-  build:
+  download-model:
     runs-on: ubuntu-latest
     steps:
-      - name: 生成测试文件
-        run: echo 'hello' > hello.txt
-      - name: 上传测试工件
+      - name: 下载 Whisper Small 模型
+        run: |
+          curl -L --fail --retry 5 --retry-delay 5 \
+            -o whisper-small.llamafile \
+            'https://huggingface.co/Mozilla/whisperfile/resolve/main/whisper-small.llamafile?download=true'
+          echo '8a74a4ff175b732571b8eb0ab5877cf33128d49c642c40547f4732163933618b  whisper-small.llamafile' | sha256sum -c -
+          chmod +x whisper-small.llamafile
+      - name: 上传语音识别模型
         uses: actions/upload-artifact@v4
         with:
-          name: temp-test
-          path: hello.txt
+          name: whisper-small-llamafile
+          path: whisper-small.llamafile
+          compression-level: 0
           retention-days: 1
