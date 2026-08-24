@@ -1,0 +1,19 @@
+name: 临时工件测试
+
+on:
+  push:
+    paths:
+      - '.github/workflows/temp-artifact.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 生成测试文件
+        run: echo 'hello' > hello.txt
+      - name: 上传测试工件
+        uses: actions/upload-artifact@v4
+        with:
+          name: temp-test
+          path: hello.txt
+          retention-days: 1
