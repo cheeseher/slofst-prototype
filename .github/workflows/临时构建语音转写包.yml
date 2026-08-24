@@ -1,14 +1,13 @@
 name: 临时构建语音转写包
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - main
 
 permissions:
-  contents: write
-  issues: write
+  contents: read
 
 jobs:
   build:
@@ -40,16 +39,12 @@ jobs:
           sha256sum whisper-small-q5-linux.zip > whisper-small-q5-linux.zip.sha256
           ls -lh whisper-small-q5-linux.zip*
 
-      - name: 创建临时发布
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release delete asr-temp-20260825 --repo "${{ github.repository }}" --yes --cleanup-tag || true
-          gh release create asr-temp-20260825 \
-            whisper-small-q5-linux.zip \
-            whisper-small-q5-linux.zip.sha256 \
-            --repo "${{ github.repository }}" \
-            --target "${{ github.event.pull_request.head.sha }}" \
-            --title "临时语音转写包" \
-            --notes "仅用于本次录音离线转写，完成后删除。"
-          gh issue comment 3 --repo "${{ github.repository }}" --body "临时语音转写包已构建：https://github.com/${{ github.repository }}/releases/download/asr-temp-20260825/whisper-small-q5-linux.zip"
+      - name: 上传临时产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-small-q5-linux
+          path: |
+            whisper-small-q5-linux.zip
+            whisper-small-q5-linux.zip.sha256
+          retention-days: 1
+          compression-level: 0
