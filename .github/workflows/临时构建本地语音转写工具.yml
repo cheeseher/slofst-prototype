@@ -1,0 +1,44 @@
+name: 临时构建本地语音转写工具
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: 拉取 whisper.cpp
+        run: git clone --depth 1 https://github.com/ggml-org/whisper.cpp.git
+
+      - name: 构建 Linux 转写程序
+        run: |
+          cmake -S whisper.cpp -B whisper.cpp/build \
+            -DWHISPER_BUILD_TESTS=OFF \
+            -DWHISPER_BUILD_EXAMPLES=ON \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build whisper.cpp/build --config Release -j2
+
+      - name: 下载中文多语种模型
+        run: bash whisper.cpp/models/download-ggml-model.sh small-q5_1
+
+      - name: 整理临时产物
+        run: |
+          mkdir -p artifact
+          cp whisper.cpp/build/bin/whisper-cli artifact/
+          cp whisper.cpp/models/ggml-small-q5_1.bin artifact/
+          chmod +x artifact/whisper-cli
+          ls -lh artifact
+
+      - name: 上传临时产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-small-q5-linux
+          path: artifact
+          retention-days: 1
+          compression-level: 0
