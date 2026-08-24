@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/temp-artifact.yml'
+  pull_request:
 
 jobs:
   build:
